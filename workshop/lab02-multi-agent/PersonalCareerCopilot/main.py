@@ -3,7 +3,7 @@
 import json
 import os
 
-from agent_framework import Agent, AgentExecutor, WorkflowBuilder, tool
+from agent_framework import Agent, AgentExecutor, WorkflowAgent, WorkflowBuilder, tool
 from agent_framework.foundry import FoundryChatClient
 from agent_framework_foundry_hosting import ResponsesHostServer
 from azure.identity import DefaultAzureCredential
@@ -214,9 +214,8 @@ async def search_microsoft_learn_for_plan(
         return f"Microsoft Learn MCP unavailable ({ex}). See: https://learn.microsoft.com/api/mcp"
 
 
-def main():
-    configure_tracing()
-
+def create_workflow_agent() -> WorkflowAgent:
+    """Create the career copilot workflow for hosting or direct evaluation."""
     project_endpoint = get_required_environment_variable("FOUNDRY_PROJECT_ENDPOINT")
     model_deployment = get_required_environment_variable(
         "AZURE_AI_MODEL_DEPLOYMENT_NAME"
@@ -255,7 +254,7 @@ def main():
     matching_executor = AgentExecutor(matching_agent, context_mode="last_agent")
     gap_executor = AgentExecutor(gap_analyzer, context_mode="last_agent")
 
-    workflow_agent = (
+    return (
         WorkflowBuilder(
             start_executor=resume_executor,
             output_executors=[gap_executor],
@@ -267,6 +266,11 @@ def main():
         .as_agent()
     )
 
+
+def main():
+    configure_tracing()
+
+    workflow_agent = create_workflow_agent()
     server = ResponsesHostServer(workflow_agent)
     server.run()
 

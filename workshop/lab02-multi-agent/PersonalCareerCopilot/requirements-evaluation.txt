@@ -1,0 +1,6 @@
+-r requirements.txt
+
+# Evaluation dependencies integrate Azure AI evaluators with pytest and Test Explorer.
+azure-ai-evaluation==1.18.3
+pytest==8.4.2
+pytest-asyncio==1.4.0
