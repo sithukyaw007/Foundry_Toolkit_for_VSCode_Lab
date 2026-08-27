@@ -196,26 +196,37 @@ Keep `default_options={"store": False}` for all five agents.
 
 ### Step 3 - Test the selected and fallback paths
 
-#### Selected Careers listing
+#### Prompt 1 - Cloud Engineer
 
 ```text
 Resume:
-Synthetic cloud engineer with four years of Python, Terraform, and CI/CD.
-
-Selected Job Key:
-<paste-one-exact-key-from-search>
-```
-
-#### Original Lab 02 fallback
-
-Start a new request with no `Selected Job Key:` and include:
-
-```text
-Resume:
-Synthetic application developer with three years of Python and API experience.
+Title: Cloud Engineer
+Synthetic cloud engineer with 6 years of Python, Azure, Kubernetes, Terraform,
+and CI/CD experience. Certified Azure Solutions Architect Expert.
 
 Job Description:
-<paste a synthetic or public job description>
+Senior Cloud Engineer at Contoso Ltd.
+Required: Python, Azure, Kubernetes, Terraform, and CI/CD.
+Preferred: Go and Prometheus.
+Experience: 5+ years in cloud infrastructure.
+```
+
+#### Prompt 2 - UI/UX Designer
+
+```text
+Resume:
+Title: UI/UX Designer
+Synthetic UI/UX designer with 4 years of experience in digital product design, 
+user research, and interaction design. Proficient in Figma, Adobe XD, and prototyping.
+Strong background in accessibility standards and design systems. Certified in 
+UX Design from Nielsen Norman Group.
+
+Job Description:
+Senior UI/UX Designer at TechStart Inc.
+Required: Figma or Adobe XD, user research methodology, interaction design, 
+accessibility (WCAG), design systems, and cross-functional collaboration.
+Preferred: Prototyping tools (Framer, Principle), motion design, and data visualization.
+Experience: 4+ years in product design with a portfolio demonstrating UX thinking.
 ```
 
 The first request should use Careers MCP. The second should retain the original
@@ -267,33 +278,6 @@ Never place the key in:
 - [ ] `TODO 1` calls `await get_careers_job(job_key)`.
 - [ ] `TODO 2` assigns the Careers tool only to `CareerMcpListAgent`.
 
-## How to interpret the enriched output
-
-| Output element | Original Lab 02 | Careers MCP challenge |
-|---|---|---|
-| Candidate evidence | Parsed from synthetic resume | Unchanged |
-| Job requirements | Parsed from pasted text | Grounded in one retrieved listing |
-| Fit score | 100-point evidence-based score | Same scoring model |
-| Gaps | Derived from pasted requirements | Derived from retrieved requirements |
-| Roadmap | Microsoft Learn resources | Unchanged, but grounded in retrieved gaps |
-| Source identity | Often implicit | Exact key, URL, agency, title, and dataset version |
-| Reproducibility | Depends on pasted text | Re-run against the same stable key and snapshot version |
-
-The enhancement improves source transparency and reproducibility without giving
-the model permission to browse or choose a job autonomously.
-
-## Failure behavior and fallback
-
-| Situation | Expected behavior |
-|---|---|
-| Missing endpoint/key | Fail configuration preflight with an actionable error |
-| Unauthorized key | Report MCP retrieval failure; do not expose key details |
-| Unknown or malformed key | Report failure; do not select another listing |
-| Both key and pasted JD | Use the selected key; do not blend both sources |
-| No key but pasted JD | Use the original Lab 02 path |
-| Neither key nor pasted JD | Ask the learner to search and provide one exact key |
-| Careers MCP unavailable during workshop | Start a new request using the pasted-JD fallback |
-
 ## Stretch goals
 
 After the base challenge works:
@@ -308,17 +292,6 @@ After the base challenge works:
 Do not add autonomous job selection, send resume data to the shared service, or
 combine multiple listings into one fit score.
 
-## Trainer debrief
-
-Ask attendees:
-
-1. Why is search kept outside the agent?
-2. Why can only one agent call `get_job`?
-3. What does the stable key contribute beyond a source URL?
-4. Why must retrieved job descriptions be treated as untrusted data?
-5. What breaks if source metadata is not relayed with `last_agent` context?
-6. How does this enhancement preserve the original Lab 02 fallback?
-
 The key lesson is that MCP adds useful external context, while explicit
 selection, least-privilege tools, privacy boundaries, and provenance keep the
 workflow predictable and auditable.
@@ -328,6 +301,3 @@ After completing and testing the challenge, compare your implementation with
 the completed source as a copy target before attempting the tasks.
 
 ---
-
-**Previous:** [Summary & Next Steps](09-summary.md) ·
-**Back to:** [Lab 02 Learning Path](README.md)
