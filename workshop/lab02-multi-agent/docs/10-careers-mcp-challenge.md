@@ -298,33 +298,6 @@ Never place the key in:
 - [ ] The original pasted-JD path still works.
 - [ ] `azure.yaml` contains environment references, not a literal API key.
 
-## How to interpret the enriched output
-
-| Output element | Original Lab 02 | Careers MCP challenge |
-|---|---|---|
-| Candidate evidence | Parsed from synthetic resume | Unchanged |
-| Job requirements | Parsed from pasted text | Grounded in one retrieved listing |
-| Fit score | 100-point evidence-based score | Same scoring model |
-| Gaps | Derived from pasted requirements | Derived from retrieved requirements |
-| Roadmap | Microsoft Learn resources | Unchanged, but grounded in retrieved gaps |
-| Source identity | Often implicit | Exact key, URL, agency, title, and dataset version |
-| Reproducibility | Depends on pasted text | Re-run against the same stable key and snapshot version |
-
-The enhancement improves source transparency and reproducibility without giving
-the model permission to browse or choose a job autonomously.
-
-## Failure behavior and fallback
-
-| Situation | Expected behavior |
-|---|---|
-| Missing endpoint/key | Fail configuration preflight with an actionable error |
-| Unauthorized key | Report MCP retrieval failure; do not expose key details |
-| Unknown or malformed key | Report failure; do not select another listing |
-| Both key and pasted JD | Use the selected key; do not blend both sources |
-| No key but pasted JD | Use the original Lab 02 path |
-| Neither key nor pasted JD | Ask the learner to search and provide one exact key |
-| Careers MCP unavailable during workshop | Start a new request using the pasted-JD fallback |
-
 ## Stretch goals
 
 After the base challenge works:
